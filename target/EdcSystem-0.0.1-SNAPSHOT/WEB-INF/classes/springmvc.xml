@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+	<context:component-scan
+		base-package="com.edc.controller"></context:component-scan>
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<mvc:annotation-driven>
+		<!-- 消息转换器,解决responseBody返回中外乱码问题 -->
+		<mvc:message-converters
+			register-defaults="true">
+			<bean
+				class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes"
+					value="text/plain;charset=UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="maxInMemorySize" value="1000000000"></property>
+		<property name="maxUploadSize" value="1000000000"></property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.edc.interceptor.MyInterceptor">
+				<property name="list">
+					<list>
+						<value>login.do</value>
+						<value>register.do</value>
+						<value>loadimg.do</value>
+						<value>toLoginPage.do</value>
+						<value>to-ProductParticulars.do</value>
+						<value>to-ShopParticulars.do</value>
+						<value>to-prevLogin.do</value>
+						<value>to-AllProduct.do</value>
+						<value>prewLogin.do</value>
+						<value>saveSeller.do</value>
+						<value>getSomeProduct.do</value>
+						<value>to_prev_ShoppingTrolley.do</value>
+						<value>getProductList.do</value>
+						<value>toSubmitOrder.do</value>
+						<value>getSomeSeller.do</value>
+						<value>to-prev_userInfo.do</value>
+						<value>selectAllProductByShopId.do</value>
+						<value>toSelectSeller.do</value>
+						<value>toRegister.do</value>
+						<value>getEmailCode.do</value>
+						<value>saveBuyer.do</value>
+						<value>ok.do</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>

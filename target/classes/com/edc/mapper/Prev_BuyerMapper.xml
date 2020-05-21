@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edc.mapper.Prev_BuyerMapper">
+	<!-- 2020-4-21 -->
+	<resultMap type="com.edc.entity.Buyer" id="buyerLogin">
+		<id property="b_Id" column="b_Id" />
+		<result property="b_Name" column="b_Name" />
+		<result property="b_Code" column="b_Code" />
+		<result property="b_Pwd" column="b_Pwd" />
+		<result property="b_Birthday" column="b_Birthday" />
+		<result property="b_Sex" column="b_Sex" />
+		<result property="b_Phone" column="b_Phone" />
+		<result property="b_ImgPath" column="b_ImgPath" />
+		<collection property="adds"
+			ofType="com.edc.entity.BuyerAdd">
+			<id column="Addr_Id" property="addr_Id" />
+			<result column="Address" property="address" />
+			<result column="Addr_bId" property="addr_Bid" />
+		</collection>
+	</resultMap>
+	<!-- 用户登录2020-4-28 -->
+	<select id="prevLogin" resultType="Buyer">
+		SELECT *
+		FROM buyer
+		WHERE
+		b_Code=#{name} OR email=#{name}
+	</select>
+	<!-- 查询前台商品推荐 -->
+	<select id="getSomeProduct" resultMap="myProduct">
+		SELECT * FROM
+		product,producttype WHERE product.P_PcId=producttype.Pc_Id ORDER BY
+		p_Good DESC LIMIT 0,8
+	</select>
+	<resultMap type="Product" id="myProduct">
+		<id property="p_Id" column="P_Id" />
+		<result property="p_Name" column="P_Name" />
+		<result property="p_Price" column="P_Price" />
+		<result property="p_Good" column="P_Good" />
+		<result property="p_Count" column="P_Count" />
+		<result property="p_Mid" column="P_mId" />
+		<result property="p_pcId" column="P_pcId" />
+		<result property="p_Info" column="P_Info" />
+		<result property="p_ImgPath" column="P_imgPath" />
+		<association property="productType" javaType="ProductType">
+			<id property="pc_Id" column="Pc_Id" />
+			<result property="pc_TypeName" column="Pc_typeName" />
+		</association>
+	</resultMap>
+
+	<!-- 2020-4-15 -->
+	<!-- 饭菜类型 -->
+	<select id="productTypeList" resultType="ProductType">
+		SELECT *FROM producttype
+	</select>
+	<!-- 2020-4-16 -->
+	<resultMap type="com.edc.entity.Product" id="MyProduct">
+		<id property="p_Id" column="P_Id" />
+		<result property="productType.pc_Id" column="Pc_Id" />
+		<result property="productType.pc_TypeName" column="Pc_typeName" />
+	</resultMap>
+	<!-- 饭菜商品详情 -->
+	<select id="productList" resultType="Product"
+		resultMap="MyProduct">
+		SELECT *FROM product,producttype
+		<where>
+			p_PcId=Pc_Id
+			<if test="name != null">
+				and P_Name LIKE CONCAT('%',#{name},'%')
+			</if>
+			<if test="pcId != 0">
+				AND Pc_Id=#{pcId}
+			</if>
+			<!-- 2020-4-17 -->
+			<if test="price != -1">
+				AND P_Price>#{price} AND (#{price}+20)>=P_Price
+			</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+	<!-- 2020-4-16 -->
+	<!-- 饭菜商品数量 -->
+	<select id="producCount" resultType="Integer">
+		SELECT COUNT(1) FROM product,seller ,producttype
+		<where>
+			p_PcId=Pc_Id AND M_Id=P_mId
+			<if test="name != null">
+				and P_Name LIKE CONCAT('%',#{name},'%')
+			</if>
+			<if test="pcId != 0">
+				AND Pc_Id=#{pcId}
+			</if>
+			<!-- 2020-4-17 -->
+			<if test="price != -1">
+				AND P_Price>#{price} AND (#{price}+20)>=P_Price
+			</if>
+		</where>
+	</select>
+
+	<select id="getSomeSeller" resultType="Seller">
+		SELECT * FROM seller LIMIT
+		0,8
+	</select>
+	<select id="getSellerInfo" parameterType="Integer"
+		resultType="Seller">
+		SELECT * FROM seller WHERE M_Id=#{shopId}
+	</select>
+	<select id="getTwoProductByShopId" parameterType="Integer"
+		resultType="Product">
+		SELECT * FROM product WHERE p_mid=#{shopId} ORDER BY P_Good
+		DESC LIMIT 0,2
+	</select>
+
+	<select id="getProductId" resultType="Product">
+		SELECT * FROM product where
+		p_Id=#{p_Id}
+	</select>
+	<select id="getAllProductByShopId" resultType="Product">
+		SELECT * FROM
+		product WHERE P_mId=#{shopId} LIMIT #{pageIndex},#{pageSize}
+	</select>
+	<select id="getProductCountByShopId" resultType="Integer">
+		SELECT Count(1)
+		FROM product WHERE P_mId=#{shopId}
+	</select>
+
+	<!-- 2020-4-17 -->
+	<resultMap id="MyComment" type="Comment">
+		<id property="c_Id" column="C_Id" />
+		<result property="c_Content" column="C_content" />
+		<result property="c_Date" column="C_date" />
+		<result property="c_Bid" column="C_bId" />
+		<result property="c_Pid" column="C_pId" />
+		<association property="buyer" javaType="Buyer">
+			<id property="b_Id" column="b_Id"></id>
+			<result property="b_Name" column="b_Name" />
+			<result property="b_ImgPath" column="b_ImgPath" />
+		</association>
+	</resultMap>
+	<select id="getCommentProId" resultMap="MyComment">
+		SELECT
+		c.c_Id,c.`C_content`,c.`C_date`,c.`C_pId`,c.`C_bId`,b.`b_Name`,b.`b_ImgPath`
+		FROM
+		`comment` c,`buyer` b
+		WHERE c.`C_bId`=b.`b_Id` AND
+		c.`C_pId`=#{p_Id}
+	</select>
+
+	<!-- 2020-4-20 -->
+	<resultMap type="com.edc.entity.Order" id="order">
+		<id property="o_Id" column="O_Id" />
+		<result property="buyer.b_Id" column="b_Id" />
+		<result property="buyer.b_Name" column="b_Name" />
+		<result property="buyer.b_Code" column="b_Code" />
+		<result property="buyer.b_Pwd" column="b_Pwd" />
+		<result property="buyer.b_Birthday" column="b_Birthday" />
+		<result property="buyer.b_Sex" column="b_Sex" />
+		<result property="buyer.b_Phone" column="b_Phone" />
+		<result property="buyer.b_ImgPath" column="b_ImgPath" />
+		<result property="payment_type.zft_id" column="zft_id" />
+		<result property="payment_type.zft_type" column="zft_type" />
+		<result property="product.p_Name" column="P_Name" />
+	</resultMap>
+	<!-- 查询登录用户订单信息2020-4-20 -->
+	<select id="prevOrderList" resultType="Order" resultMap="order">
+		SELECT *
+		FROM `order` ,buyer,payment_type,product WHERE O_pId=P_Id
+		AND
+		O_bId=b_Id AND o_zftId=zft_id AND b_Id=#{b_id}
+	</select>
+
+	<!-- 2020-4-20 -->
+	<resultMap type="com.edc.entity.Buyer" id="buyer">
+		<id property="b_Id" column="b_Id" />
+		<result property="bAdd.addr_Id" column="Addr_Id" />
+		<result property="bAdd.address" column="Address" />
+		<result property="bAdd.addr_Bid" column="Addr_bId" />
+	</resultMap>
+	<!-- 查询登录用户收货地址信息2020-4-21 -->
+	<select id="prevAddress" resultType="Buyer" resultMap="buyer">
+		SELECT * FROM buyer,buyeraddr
+		<where>
+			Addr_bId=b_Id AND b_Id=#{b_id}
+			<if test="Addr_Id != null">
+				and Addr_Id=#{Addr_Id}
+			</if>
+		</where>
+	</select>
+
+	<!-- 修改用户信息2020-4-20 -->
+	<update id="updateBuyer">
+		UPDATE buyer SET b_Name=#{b_Name},b_Phone=#{b_phone}
+		WHERE b_Id=#{b_id}
+	</update>
+
+	<!-- 修改用户地址信息2020-4-20 -->
+	<update id="updateBuyerAdd">
+		UPDATE buyeraddr SET Address=#{address} WHERE
+		Addr_bId=#{b_id}
+	</update>
+
+	<!-- 修改用户信息2020-4-21 -->
+	<update id="updateprev">
+		UPDATE buyer SET
+		b_Name=#{buyer.b_Name},b_Phone=#{buyer.b_Phone},b_Birthday=#{buyer.b_Birthday},b_ImgPath=#{buyer.b_ImgPath}
+		,b_Pwd=#{buyer.b_Pwd} WHERE b_Id=#{buyer.b_Id}
+	</update>
+	<!--查询所有会员类型 2020/4/21 -->
+	<select id="getSelectAll" resultType="Viptype">
+		SELECT * FROM viptype
+	</select>
+
+	<resultMap id="ProComment" type="com.edc.entity.Comment">
+		<id property="c_Id" column="C_Id" />
+		<result property="c_Content" column="C_content" />
+		<result property="c_Date" column="C_date" />
+		<result property="c_Bid" column="C_bId" />
+		<result property="c_Pid" column="C_pId" />
+		<association property="product" javaType="Product">
+			<id property="p_Id" column="P_Id"></id>
+			<result property="p_Name" column="P_Name" />
+		</association>
+		<association property="seller" javaType="Seller">
+			<id property="m_Id" column="M_Id"></id>
+			<result property="m_ShopName" column="M_ShopName" />
+		</association>
+	</resultMap>
+	<select id="getCommentById" resultMap="ProComment">
+		SELECT * FROM `comment`
+		c,`product` p,`seller` s
+		WHERE c.`C_pId`=p.`P_Id` AND c.C_bId=#{c_Bid}
+		AND
+		p.`P_mId`=s.`M_Id`
+	</select>
+
+	<select id="getSellerLikeShopName" resultType="Seller">
+		select * from seller
+		<where>
+			<if test="shopName != null">
+				M_shopName like concat('%',#{shopName},'%')
+			</if>
+		</where>
+	</select>
+	<select id="getSellerCountLikeShopName" resultType="Integer">
+		select Count(1) from seller
+		<where>
+			<if test="shopName != null">
+				M_shopName like concat('%',#{shopName},'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="getBuyerImgPath" resultType="Integer">
+		SELECT COUNT(1) FROM
+		buyer WHERE b_ImgPath =#{ImgName}
+	</select>
+
+	<!-- 用户注册 2020年4月22日14:41:11 -->
+	<insert id="saveBuyer">
+		INSERT INTO
+		`buyer`(`b_Name`,`b_Code`,`b_Pwd`,`b_Birthday`,`b_Sex`,`b_Phone`,`b_ImgPath`,`email`)
+		VALUES(#{b_Name},#{b_Code},#{b_Pwd},#{b_Birthday},#{b_Sex},#{b_Phone},#{b_ImgPath},#{email});
+	</insert>
+	<!-- 留言信息删除 -->
+	<delete id="deleteCommentInfo" parameterType="Integer">
+		DELETE
+		FROM
+		`comment` WHERE C_Id =#{c_Id}
+	</delete>
+
+	<!-- 用户地址删除2020-4-23 -->
+	<delete id="deletePrevAddress" parameterType="Integer">
+		DELETE FROM
+		buyeraddr WHERE Addr_Id =#{prevAddId}
+	</delete>
+
+	<!-- 查询用户购物车数量2020-4-23 -->
+	<select id="selectShoppingCartCount" resultType="Integer">
+		SELECT COUNT(1)
+		FROM shoppingCart WHERE buyerId=#{buyerId}
+	</select>
+	<insert id="buyVip">
+		INSERT INTO vipuser
+		VALUES(#{id},#{vid},#{bid},#{date})
+	</insert>
+	<select id="selectUserIsVip" resultType="Integer">
+		SELECT COUNT(1) FROM
+		vipuser WHERE VU_bId=#{bid}
+	</select>
+
+	<resultMap type="ShoppingCart" id="MyShoppingCart">
+		<id property="id" column="id" />
+		<result property="buyerId" column="buyerId" />
+		<result property="productId" column="productId" />
+		<result property="shopCont" column="shopCount" />
+		<result property="money" column="money" />
+		<association property="product" javaType="Product">
+			<id property="p_Id" column="P_Id" />
+			<result property="p_Name" column="P_Name" />
+			<result property="p_Price" column="P_Price" />
+			<result property="p_Good" column="P_Good" />
+			<result property="p_Count" column="P_Count" />
+			<result property="p_Mid" column="P_mId" />
+			<result property="p_pcId" column="P_pcId" />
+			<result property="p_Info" column="P_Info" />
+			<result property="p_ImgPath" column="P_imgPath" />
+		</association>
+		<association property="seller" javaType="Seller">
+			<id property="m_Id" column="M_Id"></id>
+			<result property="m_ShopName" column="M_ShopName" />
+		</association>
+	</resultMap>
+	<select id="getAllByBid" resultMap="MyShoppingCart">
+		SELECT * FROM
+		shoppingCart,product,seller WHERE
+		shoppingCart.`productId`=product.`P_Id` AND
+		product.`P_mId`=seller.`M_Id` AND shoppingCart.`buyerId`=#{bid}
+	</select>
+
+	<delete id="deleteShoppingTrolley" parameterType="Integer">
+		DELETE FROM
+		`shoppingCart` WHERE id=#{id}
+	</delete>
+	<select id="getAllAddrBybid" resultType="BuyerAdd">
+		SELECT * FROM buyeraddr
+		WHERE Addr_bId=#{bid}
+	</select>
+
+
+	<!-- 添加购物车2020年4月24 -->
+	<insert id="insertShoppingCart">
+		INSERT INTO
+		`shoppingCart`(id,buyerId,productId,shopCount,money)
+		VALUES(#{shoppingCart.id},#{shoppingCart.buyerId},#{shoppingCart.productId},#{shoppingCart.shopCont},#{shoppingCart.money});
+	</insert>
+
+	<select id="getProductById" resultType="Integer"
+		parameterType="Integer">
+		SELECT COUNT(1) FROM shoppingCart WHERE
+		buyerId=#{buyerId} AND productId =#{productId}
+	</select>
+
+	<update id="updateProductCountById">
+		UPDATE shoppingCart SET
+		shopCount=shopCount+#{count},money=money+#{money} WHERE
+		buyerId=#{buyerId} AND productId =#{productId}
+	</update>
+
+	<select id="getAllByPid" resultMap="MyShoppingCart">
+		SELECT * FROM
+		shoppingCart,product,seller WHERE
+		shoppingCart.`productId`=product.`P_Id` AND
+		product.`P_mId`=seller.`M_Id` AND shoppingCart.`productId`=#{pid} AND
+		shoppingCart.`buyerId`=#{bid}
+	</select>
+
+	<insert id="addOrder" parameterType="Order">
+		INSERT INTO
+		`order`(O_pId,O_Count,O_CreatDate,O_bId,O_totalPrices,O_State,o_zftId,o_OrderCode,o_address)
+		VALUES(#{o_Pid},#{o_Count},#{o_CreatDate},#{o_Bid},#{o_TotalPrices},#{o_State},#{o_ZftId},#{o_OrderCode},#{o_Address})
+	</insert>
+
+	<update id="updateState">
+		UPDATE `order` SET O_State=#{state}
+		WHERE
+		o_OrderCode=#{out_trade_no}
+	</update>
+
+	<delete id="delShopCartById">
+		DELETE FROM shoppingCart WHERE
+		productId=#{pid} AND
+		buyerId =#{bid}
+	</delete>
+	<select id="selectCommentCountByBid" resultType="Integer">
+		SELECT COUNT(1)
+		FROM comment WHERE `C_bId`=#{bid} AND`C_pId`=#{pid}
+	</select>
+	<insert id="addComment" parameterType="Comment">
+		INSERT INTO
+		`comment`(`C_content`,`C_date`,`C_bId`,`C_pId`)
+		VALUES(#{c_Content},#{c_Date},#{c_Bid},#{c_Pid})
+	</insert>
+	<select id="selectOrderStateOk" parameterType="Integer"
+		resultType="Integer">
+		SELECT COUNT(1) FROM `order` WHERE `O_bId`=1 AND
+		`O_State`="已完成"
+	</select>
+	<select id="selectOrderStateFalse" parameterType="Integer"
+		resultType="Integer">
+		SELECT COUNT(1) FROM `order` WHERE `O_bId`=1 AND
+		`O_State`="未支付"
+	</select>
+	<!-- 2020-4-28 -->
+	<select id="getBuyerCode" resultType="Integer">
+		SELECT COUNT(1) FROM
+		buyer
+		WHERE b_Code=#{bcode}
+	</select>
+	<!-- 2020-4-28 -->
+	<!--登录那也改了 -->
+	<select id="getBuyerEmail" resultType="Integer">
+		SELECT COUNT(1) FROM
+		buyer
+		WHERE email=#{email}
+	</select>
+	<insert id="addaddr" parameterType="BuyerAdd">
+		INSERT INTO
+		buyeraddr(`Address`,`Addr_bId`) VALUES(#{address},#{addr_Bid})
+	</insert>
+	<select id="sellectSaleCountBypId" parameterType="Integer"
+		resultType="Integer">
+		SELECT COUNT(1) FROM `order` WHERE `O_pId`=#{pid} AND
+		`O_State`="已完成"
+	</select>
+</mapper>	

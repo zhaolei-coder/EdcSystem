@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edc.mapper.Back_AdminMapper">
+	<!-- 用户登录 -->
+	<select id="userlogin" resultType="Admin">
+		select * from admin where
+		A_Code=#{name}
+	</select>
+
+	<!--List<Seller> getAllSeller() 查询商家列表 -->
+	<select id="getAllSeller" resultType="Seller">
+		select * from seller
+		<where>
+			<if test="name != null">
+				M_Name LIKE CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+
+	<!-- public Integer getSellerCount(String SellerName); -->
+	<select id="getSellerCount" resultType="Integer">
+		select count(1) from seller
+		<where>
+			<if test="name != null">
+				M_Name LIKE CONCAT('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+
+	<!-- getAllVipUsers 查询所有会员信息 -->
+	<select id="getAllVipUsers" resultType="Buyer">
+		SELECT * FROM buyer , vipuser ,viptype
+		<where>
+			buyer.`b_Id`=vipuser.`VU_bId` AND vipuser.`VU_vId`=viptype.`V_Id`
+			<if test="bname != null">
+				and buyer.B_Name LIKE CONCAT('%',#{bname},'%')
+			</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+	<!-- getVipUserCount 查询会员个数 -->
+	<select id="getVipUserCount" resultType="Integer">
+		<!-- sql有所修改2020-4-13 17:00:03 -->
+		SELECT COUNT(1) FROM buyer , vipuser
+		<where>
+			buyer.`b_Id`=vipuser.`VU_bId`
+			<if test="bname != null">
+				and B_Name LIKE CONCAT('%',#{bname},'%')
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteSeller" parameterType="Integer">
+		delete from seller where
+		M_ID=#{sid}
+	</delete>
+	<delete id="deleteProduct" parameterType="Integer">
+		delete from product
+		where p_mid=#{p_mid}
+	</delete>
+	<select id="selectProCountBySeller" parameterType="Integer"
+		resultType="Integer">
+		select Count(1) from product where p_mid=#{p_mid}
+	</select>
+	<select id="sellerLogin" resultType="Seller">
+		select * from seller where
+		M_Code=#{mCode}
+	</select>
+	<!-- 查询所有商品信息 -->
+	<select id="getAllproduct" resultType="Product">
+		select * from product
+		<where>
+			P_mId =#{sid}
+			<if test="proName != null">
+				and P_Name LIKE CONCAT('%',#{proName},'%')
+			</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+	<!-- 查询商品数量 -->
+	<select id="getProductCount" resultType="Integer">
+		select count(1) from product
+		<where>
+			<if test="sid !=0">
+				P_mId =#{sid}
+			</if>
+			<if test="proName != ''">
+				and P_Name LIKE CONCAT('%',#{proName},'%')
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteProduct2" parameterType="Integer">
+		delete from product
+		where P_Id=#{pid}
+	</delete>
+	<!--删除会员 -->
+	<delete id="deleteVipuser">
+		delete from vipuser where VU_bId=#{b_id}
+	</delete>
+	<!-- 查询所有商品类型 -->
+	<select id="selectAllProductType" resultType="ProductType">
+		select * from
+		producttype
+	</select>
+
+	<!-- 商家注册 -->
+	<insert id="saveSeller">
+		INSERT INTO
+		seller(M_Name,M_ShopName,CreateDate,MdifyDate,M_Code,M_Pwd,M_Phone,M_imgPath,M_BusinessHours,M_Address)
+		VALUES(#{m_Name},#{m_ShopName},#{createDate},#{mdifyDate},#{m_Code},#{m_Pwd},#{m_Phone},#{m_imgPath},#{m_BusinessHours},#{m_Address})
+	</insert>
+	<insert id="saveProduct">
+		INSERT INTO
+		product(p_Name,P_Price,p_Good,P_Count,P_mId,P_pcId,P_Info,P_imgPath)
+		VALUES(#{p_Name},#{p_Price},#{p_Good},#{p_Count},#{p_Mid},#{p_pcId},#{p_Info},#{p_ImgPath})
+	</insert>
+	<select id="getProductPicCount" resultType="Integer">
+		select COunt(1) from
+		product where P_imgPath=#{proPicName}
+	</select>
+
+	<select id="getProductByPid" resultType="Product">
+		SELECT * FROM product
+		WHERE P_Id=#{pid}
+	</select>
+
+	<update id="updateProduct" parameterType="Product">
+		UPDATE product SET
+		P_Name=#{p_Name},P_Price=#{p_Price},P_Good=#{p_Good},P_Count=#{p_Count},P_mId=#{p_Mid},P_pcId=#{p_pcId},p_Info=#{p_Info},P_imgPath=#{p_ImgPath}
+		WHERE P_Id=#{p_Id}
+	</update>
+
+
+	<!-- 用户注册 2020年4月22日14:41:11 -->
+	<insert id="saveBuyer" parameterType="Buyer">
+		INSERT INTO
+		`buyer`(`b_Name`,`b_Code`,`b_Pwd`,`b_Birthday`,`b_Sex`,`b_Phone`,`b_ImgPath`,`email`)
+		VALUES(#{b_Name},"#{b_Code}",#{b_Pwd},#{b_Birthday},#{b_Sex},#{b_Phone},#{b_ImgPath},#{email});
+	</insert>
+
+	<select id="getSellerInfo" resultType="Seller">
+		SELECT * FROM seller WHERE
+		M_Id=#{shopId}
+	</select>
+	<!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
+	<update id="updateSeller">
+		UPDATE seller SET
+		M_Name=#{seller.m_Name},M_ShopName=#{seller.m_ShopName},M_Pwd=#{seller.m_Pwd},M_Phone=#{seller.m_Phone},M_imgPath=#{seller.m_imgPath},M_Address=#{seller.m_Address}
+		WHERE M_Id=#{seller.m_Id}
+	</update>
+</mapper>	

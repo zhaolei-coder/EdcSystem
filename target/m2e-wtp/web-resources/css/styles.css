@@ -1,0 +1,157 @@
+	
+    .gwc {
+    width: 1200px;
+    overflow: hidden;
+    clear: both;
+}
+.gwc_tb1 {
+    width: 100%;
+    border-top: 1px solid #dddddd;
+    background: #f1f1f1;
+    height: 50px;
+    margin-top: 20px;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 5px 10px #eaeaea;
+}
+a, input {
+    text-decoration: none;
+    color: #333333;
+    outline: none;
+    border: none;
+}
+.tb1_td1 {
+    width: 35px;
+    text-align: center;
+} 
+ .tb1_td3 {
+    width: 290px;
+    text-align: center;
+}
+.tb1_td4 {
+    width: 260px;
+    text-align: center;
+}
+.tb1_td5 {
+    width: 115px;
+    text-align: center;
+}
+.tb1_td6 {
+    width: 135px;
+    text-align: center;
+}
+.tb1_td7 {
+    text-align: center;
+}
+	.gwc_tb2 {
+    width: 100%;
+    margin-top: 20px;
+    background: #fdfdfd;
+    border: 1px solid #dcdcdc;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.gwc .shopname {
+    height: 35px;
+    line-height: 35px;
+    text-indent: 1em;
+    border-bottom: 1px #dddddd solid;
+    color: #666;
+}
+.Font14 {
+    font-size: 14px;
+}
+.FontW {
+    font-weight: bold;
+}
+.tb2_td1 {
+    width: 60px;
+    text-align: center;
+}
+.tb2_td2 {
+    width: 100px;
+    text-align: center;
+    padding: 8px 0;
+}
+.tb2_td2 img {
+    width: 96px;
+    height: 96px;
+    border: 1px solid #dddddd;
+}
+.tb2_td3 {
+    width: 170px;
+    padding-left: 12px;
+    padding-right: 18px;
+}
+.tb2_td3 a {
+    font-size: 14px;
+    line-height: 22px;
+}
+.tb1_td4 {
+    width: 260px;
+    text-align: center;
+}
+.tb1_td5 {
+    width: 115px;
+    text-align: center;
+}
+.tb1_td6 {
+    width: 135px;
+    text-align: center;
+}
+.tb1_td7 {
+    text-align: center;
+}
+.gwc_tb3 {
+    width: 100%;
+    border: 1px solid #d2d2d2;
+    background: #e7e7e7;
+    height: 46px;
+    margin-top: 20px;
+}
+.gwc_tb3 tr td {
+    font-size: 14px;
+}
+.tb3_td2 {
+    width: 100px;
+    text-align: center;
+}
+.GoBack_Buy a {
+    width: 100px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    color: #fff;
+    background: #333;
+    display: block;
+    float: right;
+}
+.tb3_td3 {
+    width: 220px;
+    text-align: center;
+}
+.tb3_td3 span {
+    font-size: 18px;
+    font-weight: bold;
+}
+.tb3_td4 {
+    width: 110px;
+    text-align: center;
+}
+.jz2 {
+    width: 100px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: #ff0000;
+    display: block;
+    float: right;
+}

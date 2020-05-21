@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//WebContent/404.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/prev-AllProduct.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/prev_ProductParticulars.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/prev_Register.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/prev_ShopParticulars.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/prev_SubmitOrder.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/productAdd.jsp=UTF-8
+encoding//src/main/java/com/edc/controller=UTF-8
+encoding//src/main/java/com/edc/mapper/Back_AdminMapper.java=UTF-8
+encoding//src/main/java/com/edc/mapper/impl/Back_AdminMapperImpl.java=UTF-8
+encoding//src/main/java/com/edc/service/Back_AdminService.java=UTF-8

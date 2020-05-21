@@ -1,0 +1,30 @@
+.text-reflect-base {
+	color: palegreen;
+	-webkit-box-reflect: below 10px;
+}
+
+.text {
+	margin-top: -15px;
+	width: 300px;
+	height: 200px;
+	position: absolute;
+	left: 50%;
+	margin-left: -80px;
+	background-image: -webkit-linear-gradient(left, blue, #66ffff 10%, #cc00ff 20%, #CC00CC 30%, #CCCCFF 40%, #00FFFF 50%, #CCCCFF 60%, #CC00CC 70%, #CC00FF 80%, #66FFFF 90%, blue 100%);
+	-webkit-text-fill-color: transparent;
+	/* 将字体设置成透明色 */
+	-webkit-background-clip: text;
+	/* 裁剪背景图，使文字作为裁剪区域向外裁剪 */
+	-webkit-background-size: 200% 100%;
+	-webkit-animation: masked-animation 4s linear infinite;
+	font-size: 35px;
+}
+
+@keyframes masked-animation {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -100% 0;
+	}
+}
