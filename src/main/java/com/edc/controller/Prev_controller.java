@@ -52,7 +52,11 @@ import com.edc.util.CaptchaUtils;
 import com.edc.util.EmailUtil;
 import com.edc.util.Md5Utils;
 import com.edc.util.PageUtil;
-
+/***
+ * 前台
+ * @author zhaolei
+ *
+ */
 @Controller
 @RequestMapping("/prev")
 public class Prev_controller {

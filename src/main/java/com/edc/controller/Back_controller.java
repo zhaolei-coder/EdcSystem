@@ -31,7 +31,11 @@ import com.edc.service.Back_AdminService;
 import com.edc.util.CaptchaUtils;
 import com.edc.util.Md5Utils;
 import com.edc.util.PageUtil;
-
+/***
+ * 后台
+ * @author zhaolei
+ *
+ */
 @Controller
 @RequestMapping("/back")
 public class Back_controller {
