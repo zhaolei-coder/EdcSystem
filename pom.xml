@@ -8,7 +8,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<spring-v>3.2.13.RELEASE</spring-v>
+		<spring-v>5.3.18</spring-v>
 	</properties>
 
 	<dependencies>
